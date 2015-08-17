@@ -6,7 +6,7 @@ ccsplab.org - centro cultural são paulo
 */
 
 // Esta é a página de login do usuário ou de contato com administrador do sistema.
-
+//teste
 
 if(isset($_POST['usuario'])){
 	require "include/conecta_mysql.php";
