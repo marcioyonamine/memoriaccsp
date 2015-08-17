@@ -15,7 +15,7 @@ ccsplab.org - centro cultural são paulo
 
 function autenticaUsuario($usuario, $senha){ //autentica usuario e cria inicia uma session
 	
-	$sql = "SELECT * FROM cla_usuario, cla_papelusuario WHERE cla_usuario.nomeUsuario = '$usuario' AND cla_papelusuario.idPapelUsuario = cla_usuario.cla_papelusuario_idPapelUsuario LIMIT 0,1"; //query que seleciona os campos que voltarão para na matriz
+	$sql = "SELECT * FROM mem_usuario, mem_papelusuario WHERE mem_usuario.nomeUsuario = '$usuario' AND mem_papelusuario.idPapelUsuario = mem_usuario.mem_papelusuario_idPapelUsuario LIMIT 0,1"; //query que seleciona os campos que voltarão para na matriz
 	if(mysql_query($sql)){ //verifica erro no banco de dados
 	$query = mysql_query($sql);
 		if(mysql_num_rows($query) > 0){ // verifica se retorna usuário válido
@@ -24,7 +24,7 @@ function autenticaUsuario($usuario, $senha){ //autentica usuario e cria inicia u
 					session_start();
 					$_SESSION['usuario'] = $user['nomeUsuario'];
 					$_SESSION['perfil'] = $user['idPapelUsuario'];
-					$_SESSION['instituicao'] = $user['instituicao'];
+					
 					$_SESSION['nomeCompleto'] = $user['nomeCompleto'];
 					$_SESSION['idUsuario'] = $user['idUsuario'];
 
@@ -237,7 +237,7 @@ function gravarLog($log){ //grava na tabela ig_log os inserts e updates
 	$idUsuario = $_SESSION['idUsuario'];
 	$ip = $_SERVER["REMOTE_ADDR"];
 	$data = date('Y-m-d H:i:s');
-	$sql = "INSERT INTO `ig_log` (`idLog`, `ig_usuario_idUsuario`, `enderecoIP`, `dataLog`, `descricao`) VALUES (NULL, '$idUsuario', '$ip', '$data', '$logTratado')";
+	$sql = "INSERT INTO `ig_log` (`idLog`, `mem_usuario_idUsuario`, `enderecoIP`, `dataLog`, `descricao`) VALUES (NULL, '$idUsuario', '$ip', '$data', '$logTratado')";
 
 	mysql_query($sql);
 
@@ -273,6 +273,60 @@ function geraVeiculos($tabela,$select,$instituicao){ //gera os options de um sel
 		}
 	}
 }
+function geraAbordagem($tabela,$select,$instituicao){ //gera os options de um select
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
+	}else{
+		$sql = "SELECT * FROM $tabela";
+	}
+	
+	$query = mysql_query($sql);
+	while($option = mysql_fetch_row($query)){
+		if($option[0] == $select){
+			echo "<option value='".$option[0]."' selected >".$option[3]."</option>";	
+		}else{
+			echo "<option value='".$option[0]."'>".$option[3]."</option>";	
+		}
+	}
+}
+
+function geraArea($tabela,$select,$instituicao){ //gera os options de um select
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
+	}else{
+		$sql = "SELECT * FROM $tabela";
+	}
+	
+	$query = mysql_query($sql);
+	while($option = mysql_fetch_row($query)){
+		if($option[0] == $select){
+			echo "<option value='".$option[0]."' selected >".$option[3]."</option>";	
+		}else{
+			echo "<option value='".$option[0]."'>".$option[3]."</option>";	
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function geraOpcao($tabela,$select,$instituicao){ //gera os options de um select
 	if($instituicao != ""){
 		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
@@ -302,7 +356,7 @@ function listaModulos($perfil){ //gera as tds dos módulos a carregar
 
 
 	// recupera quais módulos o usuário tem acesso
-	$sql = "SELECT * FROM cla_papelusuario WHERE idPapelUsuario = $perfil"; 
+	$sql = "SELECT * FROM mem_papelusuario WHERE idPapelUsuario = $perfil"; 
 	$query = mysql_query($sql);
 	$campoFetch = mysql_fetch_array($query,MYSQL_BOTH); // retorna a array com resultados
 
@@ -343,7 +397,7 @@ function listaModulos($perfil){ //gera as tds dos módulos a carregar
 
 }
 function verificaAcesso($usuario,$pagina){
-	$sql = "SELECT * FROM ig_usuario,ig_papelusuario WHERE ig_usuario.idUsuario = $usuario AND ig_usuario.ig_papelusuario_idPapelUsuario = ig_papelusuario.idPapelUsuario LIMIT 0,1";
+	$sql = "SELECT * FROM mem_usuario,mem_papelusuario WHERE mem_usuario.idUsuario = $usuario AND mem_usuario.mem_papelusuario_idPapelUsuario = mem_papelusuario.idPapelUsuario LIMIT 0,1";
 	$query = mysql_query($sql);
 	$verifica = mysql_fetch_array($query);
 	if($verifica["$pagina"] == 1){
@@ -371,7 +425,7 @@ function recuperaDados($tabela,$idEvento,$campo){
 
 
 function opcaoUsuario($idInstituicao,$idUsuario){
-	$sql = "SELECT DISTINCT * FROM ig_usuario,ig_papelusuario WHERE ig_usuario.ig_papelusuario_idPapelUsuario = ig_papelusuario.idPapelUsuario AND ig_papelusuario.evento = 1";
+	$sql = "SELECT DISTINCT * FROM mem_usuario,mem_papelusuario WHERE mem_usuario.mem_papelusuario_idPapelUsuario = mem_papelusuario.idPapelUsuario AND mem_papelusuario.evento = 1";
 	$query = mysql_query($sql);
 	while($campo = mysql_fetch_array($query)){
 		if($campo['idUsuario'] == $idUsuario){
