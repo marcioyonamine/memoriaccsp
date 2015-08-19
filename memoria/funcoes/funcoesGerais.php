@@ -1,23 +1,106 @@
 <?php 
 
 /*
-igSmc v0.1 - 2015
+memoria v0.1 - 2015
 ccsplab.org - centro cultural são paulo
-*/
 
-	//Verifica erro na string
-	//$mysqli = new mysqli("localhost", "root", "lic54eca","igsis_beta");
-	//if (!$mysqli->query($sql_inserir)) {
-    //printf("Errormessage: %s\n", $mysqli->error);
-	//}
+	Verifica erro na string
+	$mysqli = new mysqli("localhost", "root", "lic54eca","memoria");
+	if (!$mysqli->query($sql_inserir)) {
+    printf("Errormessage: %s\n", $mysqli->error);
+	}
+*/
 
 // Esta é a página para as funções gerais do sistema.
 
+
+function bancoMysqli(){ // Cria conexao ao banco. Substitui o include "conecta_mysql.php" .
+	$servidor = 'localhost';
+	$usuario = 'root';
+	$senha = 'lic54eca';
+	$banco = 'memoria';
+	$con = mysqli_connect($servidor,$usuario,$senha,$banco); 
+	mysqli_set_charset($con,"utf8");
+	return $con;
+}
+
+function autenticaUsuario($usuario, $senha){ //autentica usuario e cria inicia uma session
+	$sql = "SELECT * FROM mem_usuario, mem_papelusuario WHERE mem_usuario.nomeUsuario = '$usuario' AND mem_papelusuario.idPapelUsuario = mem_usuario.mem_papelusuario_idPapelUsuario LIMIT 0,1";
+	$con = bancoMysqli();
+	$query = mysqli_query($con,$sql);
+	 //query que seleciona os campos que voltarão para na matriz
+	if($query){ //verifica erro no banco de dados
+		if(mysqli_num_rows($query) > 0){ // verifica se retorna usuário válido
+			$user = mysqli_fetch_array($query);
+				if($user['senha'] == md5($_POST['senha'])){ // compara as senhas
+					session_start();
+					$_SESSION['usuario'] = $user['nomeUsuario'];
+					$_SESSION['perfil'] = $user['idPapelUsuario'];
+					//$_SESSION['instituicao'] = $user['instituicao'];
+					//$_SESSION['nomeCompleto'] = $user['nomeCompleto'];
+					$_SESSION['idUsuario'] = $user['idUsuario'];
+					//$_SESSION['idInstituicao'] = $user['idInstituicao'];
+					$log = "Fez login.";
+					//gravarLog($log);
+					header("Location: visual/index.php"); 
+				}else{
+			echo "A senha está incorreta.";
+			}
+		}else{
+			echo "O usuário não existe.";
+		}
+	}else{
+		echo "Erro no banco de dados";
+	}	
+}
+
+function saudacao(){ //saudacao inicial
+	$hora = date('H');
+	if(($hora > 12) AND ($hora <= 18)){
+		return "Boa tarde";	
+	}else if(($hora > 18) AND ($hora <= 23)){
+		return "Boa noite";	
+	}else if(($hora >= 0) AND ($hora <= 4)){
+		return "Boa noite";	
+	}else if(($hora > 4) AND ($hora <=12)){
+		return "Bom dia";
+	}
+}
+
+function listaModulos($perfil){ //gera as tds dos módulos a carregar
+	$con = bancoMysqli();
+
+	// gera uma array com todos os módulos instalados no sistema
+
+
+	// recupera quais módulos o usuário tem acesso
+	$sql = "SELECT * FROM mem_papelusuario WHERE idPapelUsuario = $perfil"; 
+	$query = mysqli_query($con,$sql);
+	$campoFetch = mysqli_fetch_array($query,MYSQL_BOTH); // retorna a array com resultados
+
+	for($i = 1; $i < sizeof($campoFetch); $i++){
+		if($campoFetch[$i] == 1){
+			$k = mysql_field_name($query, $i);
+			$descricao = recuperaModulo($k);
+			echo "<tr>";
+			echo "<td class='list_description'><b>".$descricao['nome']."</b></td>";
+			echo "<td class='list_description'>".$descricao['descricao']."</td>";
+			echo "
+			<td class='list_description'>
+			<form method='POST' action='?perfil=$k'>
+			<input type ='submit' class='btn btn-theme btn-lg btn-block' value='carregar'></td></form>"	;
+			echo "</tr>";
+		}	
+		
+	}
+}
+
+/*
 function autenticaUsuario($usuario, $senha){ //autentica usuario e cria inicia uma session
 	
-	$sql = "SELECT * FROM mem_usuario, mem_papelusuario WHERE mem_usuario.nomeUsuario = '$usuario' AND mem_papelusuario.idPapelUsuario = mem_usuario.mem_papelusuario_idPapelUsuario LIMIT 0,1"; //query que seleciona os campos que voltarão para na matriz
+	$sql = "SELECT * FROM mem_usuario, mem_papelusuario WHERE mem_usuario.nome = '$usuario' AND mem_papelusuario.idPapelUsuario = mem_usuario.mem_papelusuario_idPapelUsuario LIMIT 0,1"; //query que seleciona os campos que voltarão para na matriz
 	if(mysql_query($sql)){ //verifica erro no banco de dados
-	$query = mysql_query($sql);
+		$query = mysql_query($sql);
 		if(mysql_num_rows($query) > 0){ // verifica se retorna usuário válido
 			$user = mysql_fetch_array($query);
 				if($user['senha'] == md5($_POST['senha'])){ // compara as senhas
@@ -28,8 +111,8 @@ function autenticaUsuario($usuario, $senha){ //autentica usuario e cria inicia u
 					$_SESSION['nomeCompleto'] = $user['nomeCompleto'];
 					$_SESSION['idUsuario'] = $user['idUsuario'];
 
-					$log = "Fez login.";
-					gravarLog($log);
+					//$log = "Fez login.";
+					//gravarLog($log);
 					header("Location: visual/index.php"); 
 
 				}else{
@@ -42,7 +125,7 @@ function autenticaUsuario($usuario, $senha){ //autentica usuario e cria inicia u
 		echo "Erro no banco de dados";
 	}	
 }
-
+/*
 function exibirDataBr($data){ //retorna data d/m/y de mysql/date(a-m-d)
 	$timestamp = strtotime($data); 
 	return date('d/m/y', $timestamp);	
@@ -237,7 +320,7 @@ function gravarLog($log){ //grava na tabela ig_log os inserts e updates
 	$idUsuario = $_SESSION['idUsuario'];
 	$ip = $_SERVER["REMOTE_ADDR"];
 	$data = date('Y-m-d H:i:s');
-	$sql = "INSERT INTO `ig_log` (`idLog`, `mem_usuario_idUsuario`, `enderecoIP`, `dataLog`, `descricao`) VALUES (NULL, '$idUsuario', '$ip', '$data', '$logTratado')";
+	$sql = "INSERT INTO `mem_log` (`idLog`, `mem_usuario_idUsuario`, `enderecoIP`, `dataLog`, `descricao`) VALUES (NULL, '$idUsuario', '$ip', '$data', '$logTratado')";
 
 	mysql_query($sql);
 
@@ -245,18 +328,7 @@ function gravarLog($log){ //grava na tabela ig_log os inserts e updates
 	
 }
 
-function saudacao(){ //saudacao inicial
-	$hora = date('H');
-	if(($hora > 12) AND ($hora <= 18)){
-		return "Boa tarde";	
-	}else if(($hora > 18) AND ($hora <= 23)){
-		return "Boa noite";	
-	}else if(($hora >= 0) AND ($hora <= 4)){
-		return "Boa noite";	
-	}else if(($hora > 4) AND ($hora <=12)){
-		return "Bom dia";
-	}
-}
+
 function geraVeiculos($tabela,$select,$instituicao){ //gera os options de um select
 	if($instituicao != ""){
 		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
@@ -393,7 +465,7 @@ function listaModulos($perfil){ //gera as tds dos módulos a carregar
 		} 	
 		
 	}
-*/	
+
 
 }
 function verificaAcesso($usuario,$pagina){
@@ -692,5 +764,6 @@ function recuperaJornalista($id){
 		$c = mysql_fetch_array($query);
 		return $c;
 	
-}
+} 
+*/
 ?>
