@@ -1,5 +1,6 @@
 <?
-require "../include/conecta_mysql.php"; //conecta no banco
+@ini_set('display_errors', '1');
+error_reporting(E_ALL); 
 require "../funcoes/funcoesGerais.php"; //carrega as funcoes gerais
 
 

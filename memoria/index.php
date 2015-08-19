@@ -81,9 +81,8 @@ if(isset($_POST['usuario'])){
     <script src="visual/js/bootstrap.min.js"></script>
 	<script src="visual/js/jquery.smooth-scroll.min.js"></script>
 	<script src="visual/jquery.dlmenu.js"></script>
-	<script src="visual/wow.min.js"></script>
-	<script src="visual/custom.js"></script>
-    
+    <script src="visual/wow.min.js"></script>
+	<script src="visual/custom.js"></script>    
 
 
 </body>
