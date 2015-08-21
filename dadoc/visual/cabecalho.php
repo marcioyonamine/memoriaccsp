@@ -29,5 +29,5 @@
       </head>
   <body>
   <div id="bar">
-  <p id="p-bar"><img src="images/logo_pequeno.png" /><? echo saudacao(); ?>, <?php //echo $_SESSION['nomeCompleto'] ?> - 	</p>
+  <p id="p-bar"><? echo saudacao(); ?>, <?php echo $_SESSION['nomeCompleto'] ?> ! 	</p>
   </div>

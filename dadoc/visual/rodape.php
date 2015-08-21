@@ -18,4 +18,6 @@
 	<script src="js/wow.min.js"></script>
 	<script src="js/custom.js"></script>
   	</body>
-<? mysql_close(); //fecha qualquer conexão mysql aberta. ?>
+	
+  <? /* mysql_close(); //fecha qualquer conexão mysql aberta. ?> */
+  

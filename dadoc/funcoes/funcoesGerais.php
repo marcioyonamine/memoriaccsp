@@ -67,7 +67,7 @@ function saudacao(){ //saudacao inicial
 	}
 }
 
-function recuperaModulo($pag){ 
+function recuperaModulo($pag){    //faz os modulos do inicial adm geral, adm local, memoria, etc etc
 	$sql = "SELECT * FROM dadoc_modulo WHERE pag = '$pag'";
 	$con = bancoMysqli();
 	$query = mysqli_query($con,$sql);
@@ -122,72 +122,146 @@ function _utf8_decode($string){ //use em problemas de codificacao utf-8
 }
 
 
-
-function geraAbordagem($tabela,$select,$abordagem){ //gera os options de um select abordagem
-	if($abordagem != ""){
-		$sql = "SELECT * FROM $tabela WHERE idAbordagem = $abordagem OR idAbordagem = 999";
+function geraAbordagem($tabela,$select,$instituicao){ //gera as opções do select tabema mem_abordagem
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
 	}else{
 		$sql = "SELECT * FROM $tabela";
 	}
-	
-	$query = mysqli_query($sql);
+	$con = bancoMysqli();
+	$query = mysqli_query($con,$sql);
 	while($option = mysqli_fetch_row($query)){
 		if($option[0] == $select){
-			echo "<option value='".$option[0]."' selected >".$option[3]."</option>";	
+			echo "<option value='".$option[0]."' selected >".$option[1]."</option>";	
 		}else{
-			echo "<option value='".$option[0]."'>".$option[3]."</option>";	
+			echo "<option value='".$option[0]."'>".$option[1]."</option>";	
 		}
 	}
 }
 
-function geraArea($tabela,$select,$area){ //gera os options de um select area
-	if($area != ""){
-		$sql = "SELECT * FROM $tabela WHERE idArea = $area OR idArea = 999";
+function geraArea($tabela,$select,$instituicao){ //gera as opções do select tabema mem_area
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
 	}else{
 		$sql = "SELECT * FROM $tabela";
 	}
-	
-	$query = mysqli_query($sql);
+	$con = bancoMysqli();
+	$query = mysqli_query($con,$sql);
 	while($option = mysqli_fetch_row($query)){
 		if($option[0] == $select){
-			echo "<option value='".$option[0]."' selected >".$option[3]."</option>";	
+			echo "<option value='".$option[0]."' selected >".$option[1]."</option>";	
 		}else{
-			echo "<option value='".$option[0]."'>".$option[3]."</option>";	
-		}
-	}
-}
-function geraLocal($tabela,$select,$local){ //gera os options de um select local
-	if($local != ""){
-		$sql = "SELECT * FROM $tabela WHERE idLocal = $local OR idLocal = 999";
-	}else{
-		$sql = "SELECT * FROM $tabela";
-	}
-	
-	$query = mysqli_query($sql);
-	while($option = mysqli_fetch_row($query)){
-		if($option[0] == $select){
-			echo "<option value='".$option[0]."' selected >".$option[3]."</option>";	
-		}else{
-			echo "<option value='".$option[0]."'>".$option[3]."</option>";	
+			echo "<option value='".$option[0]."'>".$option[1]."</option>";	
 		}
 	}
 }
 
-function geraResponsabilidade($tabela,$select,$responsabilidade){ //gera os options de um select local
-	if($responsabilidade != ""){
-		$sql = "SELECT * FROM $tabela WHERE idResponsabilidade = $responsabilidade OR idResponsabilidade = 999";
+function geraLocal($tabela,$select,$instituicao){ //gera as opções do select tabema mem_local
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
 	}else{
 		$sql = "SELECT * FROM $tabela";
 	}
-	
-	$query = mysqli_query($sql);
+	$con = bancoMysqli();
+	$query = mysqli_query($con,$sql);
 	while($option = mysqli_fetch_row($query)){
 		if($option[0] == $select){
-			echo "<option value='".$option[0]."' selected >".$option[3]."</option>";	
+			echo "<option value='".$option[0]."' selected >".$option[1]."</option>";	
 		}else{
-			echo "<option value='".$option[0]."'>".$option[3]."</option>";	
+			echo "<option value='".$option[0]."'>".$option[1]."</option>";	
 		}
 	}
+}
+
+function geraResponsabilidade($tabela,$select,$instituicao){ //gera as opções do select tabema mem_responsabilidade
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
+	}else{
+		$sql = "SELECT * FROM $tabela";
+	}
+	$con = bancoMysqli();
+	$query = mysqli_query($con,$sql);
+	while($option = mysqli_fetch_row($query)){
+		if($option[0] == $select){
+			echo "<option value='".$option[0]."' selected >".$option[1]."</option>";	
+		}else{
+			echo "<option value='".$option[0]."'>".$option[1]."</option>";	
+		}
+	}
+}
+
+function geraTipo($tabela,$select,$instituicao){ //gera as opções do select tabema mem_tipo
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
+	}else{
+		$sql = "SELECT * FROM $tabela";
+	}
+	$con = bancoMysqli();
+	$query = mysqli_query($con,$sql);
+	while($option = mysqli_fetch_row($query)){
+		if($option[0] == $select){
+			echo "<option value='".$option[0]."' selected >".$option[1]."</option>";	
+		}else{
+			echo "<option value='".$option[0]."'>".$option[1]."</option>";	
+		}
+	}
+}
+
+function geraTecnica($tabela,$select,$instituicao){ //gera as opções do select tabema mem_tecnica
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
+	}else{
+		$sql = "SELECT * FROM $tabela";
+	}
+	$con = bancoMysqli();
+	$query = mysqli_query($con,$sql);
+	while($option = mysqli_fetch_row($query)){
+		if($option[0] == $select){
+			echo "<option value='".$option[0]."' selected >".$option[1]."</option>";	
+		}else{
+			echo "<option value='".$option[0]."'>".$option[1]."</option>";	
+		}
+	}
+}
+ function geraSuporte($tabela,$select,$instituicao){ //gera as opções do select tabema mem_suporte
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
+	}else{
+		$sql = "SELECT * FROM $tabela";
+	}
+	$con = bancoMysqli();
+	$query = mysqli_query($con,$sql);
+	while($option = mysqli_fetch_row($query)){
+		if($option[0] == $select){
+			echo "<option value='".$option[0]."' selected >".$option[1]."</option>";	
+		}else{
+			echo "<option value='".$option[0]."'>".$option[1]."</option>";	
+		}
+	}
+}
+function geraFormato($tabela,$select,$instituicao){ //gera as opções do select tabema mem_formato
+	if($instituicao != ""){
+		$sql = "SELECT * FROM $tabela WHERE idInstituicao = $instituicao OR idInstituicao = 999";
+	}else{
+		$sql = "SELECT * FROM $tabela";
+	}
+	$con = bancoMysqli();
+	$query = mysqli_query($con,$sql);
+	while($option = mysqli_fetch_row($query)){
+		if($option[0] == $select){
+			echo "<option value='".$option[0]."' selected >".$option[1]."</option>";	
+		}else{
+			echo "<option value='".$option[0]."'>".$option[1]."</option>";	
+		}
+	}
+}
+
+function recuperaArquivo($id){
+		$sql = "SELECT * FROM mem_contexto WHERE idContexto = $id";
+		$query = mysqli_query($sql);
+		$c = mysqli_fetch_array($query);
+		return $c;
+	
 }
 
 
