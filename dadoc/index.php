@@ -39,7 +39,7 @@ if(isset($_POST['usuario'])){
 				  <div class="col-md-offset-2 col-md-8">
 					<div class="text-hide">
 					 <h2>SISTEMA DADOC.CCSP</h2>
-					 <p>É preciso ter um login válido. Dúdivas: ???? </p>
+					 <p>É preciso ter um login válido. Dúvidas: ???? </p>
 					</div>
 				  </div>
 			  </div>
